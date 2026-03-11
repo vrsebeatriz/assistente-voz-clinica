@@ -1,0 +1,12 @@
+package model;
+
+public enum CommandType {
+    OPEN_PATIENTS,
+    OPEN_CONSULTATIONS,
+    REGISTER_PATIENT,
+    SEARCH_PATIENT,
+    SHOW_TODAY_CONSULTATIONS,
+    CLEAR_FORM,
+    EXIT_APPLICATION,
+    UNKNOWN
+}

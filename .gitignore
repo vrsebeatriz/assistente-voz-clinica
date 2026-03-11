@@ -1,0 +1,8 @@
+/target/
+/build/
+/data/
+/models/*
+!/models/README.md
+/.idea/
+/.vscode/
+*.iml
