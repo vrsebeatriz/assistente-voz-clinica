@@ -1,28 +1,76 @@
 # Assistente de Voz para Gestao Clinica
 
-Aplicacao desktop em JavaFX para demonstracao de rotinas de clinica com cadastro de pacientes, consulta de agenda e interpretacao de comandos por voz.
+Aplicacao desktop em JavaFX para cadastro de pacientes, cadastro de consultas vinculadas e execucao de comandos por voz em ambiente local.
 
-## Stack
+## Problema que o projeto resolve
+
+Em rotinas de clinica e recepcao, tarefas simples como localizar pacientes, consultar agenda e registrar atendimentos costumam depender de navegacao manual repetitiva.
+
+Este projeto foi desenvolvido para centralizar essas operacoes em uma interface desktop unica, com suporte a:
+
+- cadastro de pacientes
+- busca rapida por nome
+- cadastro de consultas ligadas ao paciente
+- filtro de agenda por data
+- comandos por voz e por texto
+
+## Solucao proposta
+
+O sistema combina JavaFX, SQLite e Vosk para entregar uma aplicacao local, sem dependencia de servicos online, capaz de:
+
+- armazenar pacientes em banco SQLite
+- vincular consultas a pacientes por chave estrangeira
+- listar e filtrar consultas do dia ou de uma data especifica
+- interpretar comandos falados como `abrir pacientes` e `buscar paciente [nome]`
+- confirmar exclusoes para evitar remocoes acidentais
+
+## Tecnologias utilizadas
 
 - Java 21+
 - JavaFX 21
 - Maven 3.9+
 - SQLite
+- JDBC (`sqlite-jdbc`)
 - Vosk
+- CSS JavaFX
 
-## Funcionalidades
+## Preview da aplicacao
 
-- painel principal com navegacao lateral, status do modulo de voz e area de resposta do sistema
+Esta secao foi deixada pronta para seguir o padrao de portifolio com GIF ou print do sistema rodando.
+
+Sugestao de uso:
+
+1. salve uma imagem em `docs/images/app.png`
+2. ou um GIF em `docs/images/demo.gif`
+3. substitua um dos blocos abaixo
+
+Exemplo com print:
+
+```md
+![Tela da aplicacao]("C:\Users\beatriz\Downloads\tela 1.png")
+![Tela da aplicacao]("C:\Users\beatriz\Downloads\tela 2.png")
+![Tela da aplicacao]("C:\Users\beatriz\Downloads\tela 3.png")```
+
+Exemplo com GIF:
+
+```md
+![Demonstracao da aplicacao](docs/images/demo.gif)
+```
+
+## Funcionalidades implementadas
+
+- painel principal com navegacao lateral e modulo de voz
 - cadastro de pacientes com nome, CPF, telefone e data de nascimento
 - busca de pacientes por nome
 - exclusao de paciente selecionado com confirmacao
-- cadastro de consultas vinculadas a pacientes, com data, horario, profissional e status
-- listagem de consultas por data
+- cadastro de consultas vinculadas a pacientes
+- filtro de consultas por data
 - atalho para consultas do dia
 - exclusao de consulta selecionada com confirmacao
-- interpretador de comandos por voz e por texto manual
-- reconhecimento de voz offline com Vosk
-- inicializacao automatica da estrutura do banco SQLite
+- reconhecimento de comandos por voz offline
+- execucao manual de comandos por texto
+- criacao automatica da estrutura do banco
+- migracao de consultas antigas para o modelo com `paciente_id`
 
 ## Comandos suportados
 
@@ -33,6 +81,44 @@ Aplicacao desktop em JavaFX para demonstracao de rotinas de clinica com cadastro
 - `mostrar consultas de hoje`
 - `limpar formulario`
 - `fechar sistema`
+
+## Como executar
+
+1. Garanta Java 21+ e Maven 3.9+ instalados.
+2. Se quiser usar voz real, baixe um modelo em portugues do Vosk.
+3. Extraia o modelo em `models/vosk-model-small-pt-0.3`.
+4. Compile o projeto:
+
+```bash
+mvn compile
+```
+
+5. Execute a aplicacao:
+
+```bash
+mvn javafx:run
+```
+
+Se o modelo do Vosk nao estiver configurado, o sistema ainda abre normalmente e pode ser testado pelo campo `Executar texto`.
+
+## Banco de dados
+
+Arquivo local:
+
+```text
+data/clinic-voice.db
+```
+
+Estrutura atual:
+
+- `pacientes`: cadastro principal
+- `consultas`: vinculadas por `paciente_id`
+
+Observacoes importantes:
+
+- o banco inicia sem dados de exemplo
+- pacientes com consultas vinculadas nao podem ser excluidos
+- consultas antigas em formato legado sao migradas automaticamente na inicializacao
 
 ## Estrutura do projeto
 
@@ -51,65 +137,25 @@ src/
         `-- styles/
 ```
 
-## Como executar
+## Diferenciais da implementacao
 
-1. Garanta Java 21+ e Maven 3.9+ instalados.
-2. Se quiser reconhecimento por voz real, baixe um modelo em portugues do Vosk.
-3. Extraia o modelo em `models/vosk-model-small-pt-0.3`.
-4. Compile o projeto:
+- reconhecimento de voz offline
+- consultas com vinculo real a pacientes
+- interface desktop com fluxo unico para pacientes, agenda e voz
+- confirmacao de exclusao
+- busca de paciente tolerante a variacoes de nome reconhecido
 
-```bash
-mvn compile
-```
+## Limitacoes atuais
 
-5. Execute a aplicacao:
+- o cadastro por voz ainda nao preenche formularios automaticamente
+- ainda nao existe edicao de pacientes
+- ainda nao existe edicao de consultas
+- a qualidade do reconhecimento de nomes depende da transcricao do Vosk
 
-```bash
-mvn javafx:run
-```
-
-Se o modelo do Vosk nao estiver configurado, a aplicacao ainda abre normalmente e o fluxo pode ser testado pelo campo `Executar texto`.
-
-## Banco de dados
-
-O banco local e criado automaticamente em:
-
-```text
-data/clinic-voice.db
-```
-
-As tabelas sao criadas automaticamente na primeira execucao, mas o banco agora inicia sem dados de exemplo.
-
-Estrutura atual do modelo:
-
-- `pacientes`: cadastro principal da base
-- `consultas`: vinculadas por `paciente_id` com chave estrangeira
-
-Se a base tiver sido criada em uma versao antiga do projeto, a migracao da tabela de consultas e feita automaticamente na inicializacao.
-
-## Observacoes importantes
-
-- O projeto ja foi validado com `mvn compile`.
-- As consultas agora sao armazenadas com vinculo real para pacientes no banco.
-- Um paciente com consultas vinculadas nao pode ser excluido enquanto essas consultas existirem.
-- A exclusao de paciente e consulta depende de selecionar uma linha na tabela correspondente.
-- O reconhecimento por voz de nomes depende da transcricao do Vosk; o sistema tenta casar o texto reconhecido com todos os pacientes cadastrados.
-
-## Fluxo sugerido de demonstracao
-
-1. Abrir a tela de pacientes.
-2. Cadastrar um novo paciente.
-3. Buscar um paciente cadastrado.
-4. Excluir um paciente selecionado.
-5. Abrir a tela de consultas.
-6. Cadastrar uma consulta vinculada ao paciente.
-7. Filtrar consultas por data.
-8. Excluir uma consulta selecionada.
-9. Testar um comando manual no painel de voz.
-
-## Melhorias futuras
+## Proximos passos
 
 - preencher formulario por voz
-- adicionar testes automatizados para controllers, services e DAOs
-- criar edicao de pacientes e consultas
+- adicionar edicao de pacientes
+- adicionar edicao de consultas
+- criar testes automatizados
 - empacotar a aplicacao com `jpackage`
