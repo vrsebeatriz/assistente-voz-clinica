@@ -34,29 +34,6 @@ O sistema combina JavaFX, SQLite e Vosk para entregar uma aplicacao local, sem d
 - Vosk
 - CSS JavaFX
 
-## Preview da aplicacao
-
-Esta secao foi deixada pronta para seguir o padrao de portifolio com GIF ou print do sistema rodando.
-
-Sugestao de uso:
-
-1. salve uma imagem em `docs/images/app.png`
-2. ou um GIF em `docs/images/demo.gif`
-3. substitua um dos blocos abaixo
-
-Exemplo com print:
-
-```md
-![Tela da aplicacao]("C:\Users\beatriz\Downloads\tela 1.png")
-![Tela da aplicacao]("C:\Users\beatriz\Downloads\tela 2.png")
-![Tela da aplicacao]("C:\Users\beatriz\Downloads\tela 3.png")```
-
-Exemplo com GIF:
-
-```md
-![Demonstracao da aplicacao](docs/images/demo.gif)
-```
-
 ## Funcionalidades implementadas
 
 - painel principal com navegacao lateral e modulo de voz
